@@ -1,0 +1,66 @@
+import elementos.*
+import plagas.*
+describe "test de elementos buenos" {
+	const hogar1 = new Hogar(mugre = 10, confort = 24)
+	const huerta1 = new Huerta(capacidadProduccion = 100)
+	const mascota1 = new Mascota(nivelSalud = 260)
+	
+	test "Hogar es bueno" {
+	assert.that(hogar1.esBueno())
+	}
+	test "Huerta es bueno" {
+	assert.that(huerta1.esBueno())
+	}
+	test "Mascota es buena" {
+	assert.that(mascota1.esBueno())
+	}
+}
+describe "test de elementos no buenos" {
+	const hogar1 = new Hogar(mugre = 10, confort = 4)
+	const huerta1 = new Huerta(capacidadProduccion = 100)
+	const mascota1 = new Mascota(nivelSalud = 200)
+	
+	method initialize() {
+		nivelProduccion.nivel(110)
+	}
+	
+	test "Hogar no es bueno" {
+	assert.notThat(hogar1.esBueno())
+	}
+	test "Huerta no es bueno" {
+	assert.notThat(huerta1.esBueno())
+	}
+	test "Mascota no es buena" {
+	assert.notThat(mascota1.esBueno())
+	}
+}
+describe "test elementos que reciben ataque" {
+	const hogar1 = new Hogar(mugre = 11, confort = 22)
+	const huerta1 = new Huerta(capacidadProduccion = 100)
+	const mascota1 = new Mascota(nivelSalud = 252)
+	const cucas1 = new Cucaracha(pesoPromedio = 8, poblacion = 20)
+	
+	method initialize() {
+		nivelProduccion.nivel(95)
+	}
+	test "Hogar recibe ataque Cucas" {
+	hogar1.recibirAtaque(cucas1)
+	assert.notThat(hogar1.esBueno())
+	assert.equals(22, cucas1.poblacion())
+	assert.equals(10, cucas1.pesoPromedio())
+	}
+	test "Huerta recibe ataque Cucas" {
+	huerta1.recibirAtaque(cucas1)
+	assert.that(huerta1.esBueno())
+	assert.equals(22, cucas1.poblacion())
+	assert.equals(10, cucas1.pesoPromedio())
+	}
+	test "Mascota recibe ataque Cucas" {
+    cucas1.pesoPromedio(10)
+	mascota1.recibirAtaque(cucas1)
+	assert.notThat(mascota1.esBueno())
+	assert.equals(252-10/*(20*0.5)*0.1*/, mascota1.nivelSalud()) // 20 = poblacion, 0.5 nivel de Danio, 0.1 transmitir enfermedades
+	assert.equals(22, cucas1.poblacion())
+	assert.equals(12, cucas1.pesoPromedio())
+	}
+}
